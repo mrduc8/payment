@@ -7,22 +7,25 @@ use Illuminate\Support\Facades\Log;
 
 class OrderComponent extends Component
 {
-    public $selectedOrder = null;
+    public $selectedPackage = []; // Lưu gói đã chọn
 
-    // Lắng nghe sự kiện từ Blade
-    protected $listeners = ['addOrder'];
+    protected $listeners = ['addOrder' => 'handleAddOrder'];
 
-    public function addOrder($package)
+    public function handleAddOrder($package)
     {
-        $this->selectedOrder = $package;
+        Log::info('Gói đã chọn:', ['package' => $package]);
+
+        if (!is_array($package)) {
+            $package = json_decode($package, true);
+        }
+
+        $this->selectedPackage = $package; // Cập nhật dữ liệu
     }
 
     public function render()
     {
         return view('livewire.order-component', [
-            'selectedOrder' => $this->selectedOrder,
+            'selectedPackage' => $this->selectedPackage,
         ]);
     }
 }
-
-

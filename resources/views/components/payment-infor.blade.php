@@ -27,12 +27,17 @@
         </div>
     </form>
 
-<div x-data="{ showModal: false, selectedPackage: null}" class="pt-4">
+<div x-data="{ showModal: false, selectedPackage: null,  get totalKBN() { 
+            if (!this.selectedPackage) return 0;
+            return Math.floor(this.selectedPackage.knb + (this.selectedPackage.knb * this.selectedPackage.bonus_percent / 100));
+        }}" class="pt-4">
     <h4 class="font-bold text-sm mb-3">Chọn gói nạp</h4>
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6"> <!-- Tăng gap để tạo khoảng cách -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6">
         @foreach ($packages as $package)
-        <div class="relative w-48 h-40 p-2 rounded-lg border shadow bg-white cursor-pointer hover:border-blue-500"
-           @click="showModal = true; selectedPackage = {{ json_encode($package) }}"  >
+        {{-- Nội dung --}}
+        <div class="relative w-48 h-40 p-2 rounded-lg border shadow bg-white cursor-pointer hover:border-blue-500" 
+        wire:click="$emit('addOrder', @json($package))"
+        @click.stop="setSelectedPackage({{ json_encode($package) }})">
 
             <!-- Background coins -->
             <img src="assets/image/itemicon/iconbackgrao.png" class="absolute inset-0 w-full h-full object-cover opacity-10" alt="Background Coins">
@@ -47,17 +52,17 @@
     
                 <!-- Bonus Information -->
                 <div class="relative w-full flex justify-center items-center mt-2">
-                    <img src="assets/image/itemicon/imgbn.png" class="w-full" alt="Bonus Background">
+                    <img src="assets/image/itemicon/iconbn1.png" class="w-full" alt="Bonus Background">
                     <span class="absolute font-bold text-[10px]">
-                        {{ number_format($package['knb']) }} <span class="text-red-500">KBN</span> + {{ number_format($package['bonus_percent']) }} %<span class="text-red-500">Bonus</span>
+                        {{ number_format($package['knb']) }} <span class="text-red-500">KBN</span> + {{ number_format($package['bonus_percent']) }}% <span class="text-red-500">Bonus</span>
                     </span>
                 </div>
     
                 <!-- Price & Add Button -->
-                <div class="w-full flex justify-between items-center mt-3 px-2">
+                <div class="w-full flex justify-between items-center mt-3 px-2" >
                     <p class="font-bold text-xs">Gói {{ number_format($package['amount']) }} VND</p>
-                    <button wire:click="$emit('addOrder', {{ json_encode($package) }})" class="p-1 bg-blue-500 rounded-md hover:bg-blue-700 flex items-center justify-center w-5 h-5"
-                    @click.stop="$wire.emit('addOrder', {{ json_encode($package) }})"  >
+                    <button class="p-1 bg-blue-500 rounded-md hover:bg-blue-700 flex items-center justify-center w-5 h-5"
+                    @click="showModal = true; selectedPackage = {{ json_encode($package) }}"  >
                         <img src="assets/image/itemicon/iconcong.png" class="w-3 h-3" alt="Plus Icon">
                     </button>
                 </div>
@@ -88,26 +93,39 @@
                         <div class="relative flex flex-col items-center text-center">
                             <img src="assets/image/itemicon/iconmain.png" class="w-8 h-8" alt="Money Bag">
                             <div class="relative w-full flex justify-center items-center mt-1">
-                                <img src="assets/image/itemicon/imgbn.png" class="w-full" alt="Bonus Background">
+                                <img src="assets/image/itemicon/iconbn1.png" class="w-full" alt="Bonus Background">
                                 <span class="absolute font-bold text-[4px]">
                                     <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.knb) : ''"></span> 
                                     <span class="text-red-500">KBN</span> + 
-                                    <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.bonus_knb) : ''"></span> 
+                                    <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.bonus_percent) : ''">% </span> 
                                     <span class="text-red-500">Bonus</span>
                                 </span>
                             </div>
                             <p class="font-bold text-[5px] mt-1">
                                 Gói <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.amount) : ''"></span> VND
                             </p>
-                            
                         </div>
         
-                    </div>
-                
+                    </div>                
                     <!-- Thông tin gói -->
-                    <p class="text-blue-600 font-semibold text-lg">
-                        Gói <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.amount) : ''"></span> VND
-                    </p>
+                    
+
+                    {{--  tính nguyên bảo bằng bao nhiều --}}
+                    <div class="">
+                        <p class="text-blue-600 font-semibold text-lg">Gói <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.amount) : ''"></span> VND</p>
+                        <span class="font-bold text-sm ">
+                            <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.knb) : ''"></span> 
+                            <span class="text-red-500">KBN</span> + 
+                            <span x-text="selectedPackage ? new Intl.NumberFormat().format(selectedPackage.bonus_percent) + '%':''"></span>
+                            <span class="text-red-500">Bonus</span>
+                            {{-- <span>=</span> --}}
+                        </span>
+                        {{-- <span x-text="totalKBN ? new Intl.NumberFormat().format(totalKBN): 'Chưa chọn gói nào' " class="font-semibold"></span>
+                        <span class="text-red-500">KBN</span> --}}
+                        <p class="font-semibold text-lg">Nhận về: <span x-text="totalKBN ? new Intl.NumberFormat().format(totalKBN): 'Chưa chọn gói nào' " class="font-semibold"></span> <span class="font-bold text-red-500">KBN</span> </p>
+                    </div>
+
+                    
                 </div>
                 
 
@@ -128,7 +146,8 @@
                     </div>
                     
                     <!-- Cột 2: Nút thêm vào giỏ hàng -->
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700" 
+                    wire:click="getPrice" >
                         Thêm vào giỏ hàng
                     </button>
                 </div>
@@ -139,3 +158,28 @@
 </div>
  
 </div>
+
+{{-- <script>
+    function addPaymentInfo(packageData) {
+        let selectedPayments = JSON.parse(localStorage.getItem('selectedPayments')) || [];
+        
+        // Thêm mục mới vào danh sách
+        selectedPayments.push(packageData);
+        
+        // Lưu lại vào localStorage
+        localStorage.setItem('selectedPayments', JSON.stringify(selectedPayments));
+        
+        // Cập nhật hiển thị danh sách
+        displayPayments();
+    }
+</script> --}}
+
+<script>
+    function setSelectedPackage(packageData) {
+        // Lưu gói vào localStorage (chỉ 1 gói)
+        localStorage.setItem('selectedPackage', JSON.stringify(packageData));
+
+        // Cập nhật giao diện
+        displaySelectedPackage();
+    }
+</script>
