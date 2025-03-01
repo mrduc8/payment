@@ -60,7 +60,7 @@
         // Nếu không có gói nào, hiển thị "Đơn hàng này đang trống"
         if (!packageInfo) {
             container.innerHTML = `
-                <div class="text-center text-gray-500 text-sm p-4 border border-gray-300 rounded-lg">
+                <div class="text-center text-gray-500 text-sm p-4 border-gray-300 rounded-lg">
                     Đơn hàng này đang trống
                 </div>
             `;

@@ -36,7 +36,6 @@
         @foreach ($packages as $package)
         {{-- Nội dung --}}
         <div class="relative w-48 h-40 p-2 rounded-lg border shadow bg-white cursor-pointer hover:border-blue-500" 
-        wire:click="$emit('addOrder', @json($package))"
         @click.stop="setSelectedPackage({{ json_encode($package) }})">
 
             <!-- Background coins -->
@@ -62,7 +61,7 @@
                 <div class="w-full flex justify-between items-center mt-3 px-2" >
                     <p class="font-bold text-xs">Gói {{ number_format($package['amount']) }} VND</p>
                     <button class="p-1 bg-blue-500 rounded-md hover:bg-blue-700 flex items-center justify-center w-5 h-5"
-                    @click="showModal = true; selectedPackage = {{ json_encode($package) }}"  >
+                    @click.stop="showModal = true; selectedPackage = {{ json_encode($package) }}"  >
                         <img src="assets/image/itemicon/iconcong.png" class="w-3 h-3" alt="Plus Icon">
                     </button>
                 </div>
@@ -147,7 +146,7 @@
                     
                     <!-- Cột 2: Nút thêm vào giỏ hàng -->
                     <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700" 
-                    wire:click="getPrice" >
+                    @click="setSelectedPackage(selectedPackage)">
                         Thêm vào giỏ hàng
                     </button>
                 </div>
@@ -182,4 +181,5 @@
         // Cập nhật giao diện
         displaySelectedPackage();
     }
+
 </script>
