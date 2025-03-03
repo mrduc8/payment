@@ -69,6 +69,7 @@
 
         // Định dạng số có dấu phẩy
         const formattedAmount = Number(packageInfo.amount).toLocaleString('vi-VN');
+        const formattedKbn = Number(packageInfo.knb).toLocaleString('vi-VN');
 
         // Cập nhật tổng tiền
         totalAmountElement.textContent = `${formattedAmount} VND`;
@@ -89,7 +90,7 @@
                     <div class="relative w-full flex justify-center items-center mt-2">
                         <img src="assets/image/itemicon/iconbn1.png" class="w-full">
                         <span class="absolute font-bold text-[10px]">
-                            ${packageInfo.knb} <span class="text-red-500">KBN</span> + ${packageInfo.bonus_percent}% <span class="text-red-500">Bonus</span>
+                            ${formattedKbn  } <span class="text-red-500">KBN</span> + ${packageInfo.bonus_percent}% <span class="text-red-500">Bonus</span>
                         </span>
                     </div>
                     <div class="w-full flex justify-between items-center mt-3 px-2">

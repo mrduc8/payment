@@ -158,28 +158,39 @@
  
 </div>
 
-{{-- <script>
-    function addPaymentInfo(packageData) {
-        let selectedPayments = JSON.parse(localStorage.getItem('selectedPayments')) || [];
-        
-        // Thêm mục mới vào danh sách
-        selectedPayments.push(packageData);
-        
-        // Lưu lại vào localStorage
-        localStorage.setItem('selectedPayments', JSON.stringify(selectedPayments));
-        
-        // Cập nhật hiển thị danh sách
-        displayPayments();
-    }
-</script> --}}
+<div id="custom-alert-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
 
 <script>
     function setSelectedPackage(packageData) {
         // Lưu gói vào localStorage (chỉ 1 gói)
         localStorage.setItem('selectedPackage', JSON.stringify(packageData));
-
+        showCustomAlert("Đã chọn");
         // Cập nhật giao diện
         displaySelectedPackage();
     }
+
+    function showCustomAlert(message) {
+        let container = document.getElementById('custom-alert-container');
+        if (!container) return; // nếu không có container thì không làm gì
+
+        // Tạo phần tử alert
+        let alertDiv = document.createElement('div');
+        alertDiv.className = 'bg-blue-500 text-white px-4 py-2 rounded shadow-lg mb-2 animate-fade-in';
+        alertDiv.innerText = message;
+
+        // Thêm vào container
+        container.appendChild(alertDiv);
+
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            // Thêm hiệu ứng fade-out nếu muốn
+            alertDiv.classList.add('animate-fade-out');
+            // Sau 500ms (thời gian fade-out) xóa element
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 300);
+        }, 2000);
+    }
+
 
 </script>
