@@ -26,6 +26,14 @@
         </div>
         <input type="radio" name="payment-method" value="atm">
     </label>
+
+    <label class="flex items-center justify-between cursor-pointer w-full p-3 border border-gray-300 rounded-lg shadow-md hover:border-blue-400 transition">
+        <div class="flex items-center gap-5">
+            <img src="assets/image/gcoin_00000.png" class="w-6 h-6 object-contain">
+            <span class="ml-3 text-gray-500 text-sm">G-Coin (Số dư: <span class="text-yellow-500">10</span> G-Coin)</spa>
+        </div>
+        <input type="radio" name="payment-method" value="atm">
+    </label>
     
     {{-- payment detail --}}
     <div class="mt-4">
