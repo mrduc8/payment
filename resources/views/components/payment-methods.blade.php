@@ -82,7 +82,7 @@
 
         // Hiển thị gói đã chọn
         container.innerHTML = `
-            <div class="relative w-48 h-40 p-2 rounded-lg border shadow bg-white cursor-pointer">
+            <div class="relative  w-48 h-40 p-2 rounded-lg border shadow bg-white cursor-pointer">
                 <img src="assets/image/itemicon/iconbackgrao.png" class="absolute inset-0 w-full h-full object-cover opacity-10">
                 <img src="assets/image/itemicon/iconkhungblu.png" class="absolute inset-0 w-full h-full">
                 <div class="relative flex flex-col items-center text-center">
@@ -97,7 +97,7 @@
                         <p class="font-bold text-xs">Gói ${formattedAmount} VND</p>
                         <button class="p-1 bg-red-500 rounded-md hover:bg-red-700 flex items-center justify-center w-5 h-5"
                             onclick="removeSelectedPackage()">
-                            <img src="assets/image/itemicon/iconxoa.png" class="w-3 h-3">
+                            <img src="assets/image/itemicon/iconx.png" class="w-full h-full">
                         </button>
                     </div>
                 </div>
