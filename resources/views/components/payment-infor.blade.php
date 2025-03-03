@@ -32,10 +32,10 @@
             return Math.floor(this.selectedPackage.knb + (this.selectedPackage.knb * this.selectedPackage.bonus_percent / 100));
         }}" class="pt-4">
     <h4 class="font-bold text-sm mb-3">Chọn gói nạp</h4>
-    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
         @foreach ($packages as $package)
         {{-- Nội dung --}}
-        <div class="relative w-48 h-40 p-2 rounded-lg border shadow bg-white cursor-pointer hover:border-blue-500" 
+        <div class="relative w-[110%] h-40 p-2  rounded-lg border shadow bg-white cursor-pointer hover:border-blue-500" 
         @click.stop="setSelectedPackage({{ json_encode($package) }})">
 
             <!-- Background coins -->
@@ -59,7 +59,7 @@
     
                 <!-- Price & Add Button -->
                 <div class="w-full flex justify-between items-center mt-3 px-2" >
-                    <p class="font-bold text-xs">Gói {{ number_format($package['amount']) }} VND</p>
+                    <p class="font-bold text-xs ">Gói {{ number_format($package['amount']) }} VND</p>
                     <button class="p-1 bg-blue-500 rounded-md hover:bg-blue-700 flex items-center justify-center w-5 h-5"
                     @click.stop="showModal = true; selectedPackage = {{ json_encode($package) }}"  >
                         <img src="assets/image/itemicon/iconcong.png" class="w-3 h-3" alt="Plus Icon">
@@ -71,8 +71,8 @@
     </div>
 
     <!-- Popup Chi Tiết -->
-    <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg w-96 p-4">
+    <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white rounded-lg w-96 p-4">
             <!-- Header -->
             <div class="flex justify-between items-center border-b pb-2">
                 <h2 class="text-lg font-semibold">Chi tiết gói</h2>
@@ -146,8 +146,9 @@
                     
                     <!-- Cột 2: Nút thêm vào giỏ hàng -->
                     <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700" 
-                    @click="setSelectedPackage(selectedPackage)">
+                    @click="setSelectedPackage(selectedPackage);showModal = false">
                         Thêm vào giỏ hàng
+
                     </button>
                 </div>
                 
@@ -158,26 +159,33 @@
  
 </div>
 
-{{-- <script>
-    function addPaymentInfo(packageData) {
-        let selectedPayments = JSON.parse(localStorage.getItem('selectedPayments')) || [];
-        
-        // Thêm mục mới vào danh sách
-        selectedPayments.push(packageData);
-        
-        // Lưu lại vào localStorage
-        localStorage.setItem('selectedPayments', JSON.stringify(selectedPayments));
-        
-        // Cập nhật hiển thị danh sách
-        displayPayments();
-    }
-</script> --}}
+<div id="custom-alert-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
 
 <script>
+    function showCustomAlert(message) {
+        let container = document.getElementById('custom-alert-container');
+        if (!container) return; // nếu không có container thì không làm gì
+
+        // Tạo phần tử alert
+        let alertDiv = document.createElement('div');
+        alertDiv.className = 'bg-blue-500 text-white px-4 py-2 rounded shadow-lg mb-2 animate-fade-in';
+        alertDiv.innerText = message;
+
+        // Thêm vào container
+        container.appendChild(alertDiv);
+
+        setTimeout(() => {
+            alertDiv.classList.add('animate-fade-out');
+            // Sau 500ms (thời gian fade-out) xóa element
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 500);
+        }, 100);
+    }
     function setSelectedPackage(packageData) {
         // Lưu gói vào localStorage (chỉ 1 gói)
         localStorage.setItem('selectedPackage', JSON.stringify(packageData));
-
+        showCustomAlert("Đã chọn");
         // Cập nhật giao diện
         displaySelectedPackage();
     }
